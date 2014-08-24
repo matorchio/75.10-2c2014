@@ -3,93 +3,148 @@ package ar.fiuba;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class QueueTest
 {
     private static QueueInterface queue;
+    private static Object         comparableElement = new Object();
+
+    @Rule
+    public ExpectedException      exception         = ExpectedException.none();
 
     @Before
     public void before()
     {
         queue = new Queue();
     }
-    
+
     @Test
-    public void EmptyQueueIsEmptyTest()
+    public void testIsEmptyInEmptyQueueTest()
     {
         assertTrue( queue.isEmpty() );
     }
 
     @Test
-    public void NonEmptyQueueIsEmptyTest()
+    public void testIsEmptyInNonEmptyQueueTest()
     {
         this.addGenericElementToQueue();
-        
+
         assertFalse( queue.isEmpty() );
     }
-    
+
     @Test
-    public void EmptyQueueSizeTest()
+    public void getSizeOfEmptyQueueTest()
     {
         assertEquals( 0, queue.size() );
     }
-    
+
     @Test
-    public void NonEmptyQueueSizeTest()
+    public void getSizeOfNonEmptyQueueTest()
     {
+        this.addGenericElementToQueue();
+
         assertNotEquals( 0, queue.size() );
     }
-    
+
     @Test
-    public void NonEmptyQueueSpecificSizeTest()
+    public void addElementToEmptyQueueTest()
     {
-        // TODO OJO! estos tests estan acoplados! independizarlos
+        this.addGenericElementToQueue();
+
+        assertEquals( 1, queue.size() );
+    }
+
+    @Test
+    public void addElementToNonEmptyQueueTest()
+    {
         this.addGenericElementToQueue();
         this.addGenericElementToQueue();
         this.addGenericElementToQueue();
         this.addGenericElementToQueue();
         this.addGenericElementToQueue();
-        
+
         assertEquals( 5, queue.size() );
     }
-    
+
     @Test
-    public void EmptyQueueAddElementTest()
+    public void getTopElementFromEmptyQueueTest()
     {
-        fail( "Not yet implemented" );
+        exception.handleAssertionErrors();
+        exception.expect( AssertionError.class );
+
+        queue.top();
     }
-    
+
     @Test
-    public void NonEmptyQueueAddElementTest()
+    public void getTopElementFromNonEmptyQueueWithOnlyOneElementTest()
     {
-        fail( "Not yet implemented" );
+        queue.add( comparableElement );
+
+        assertEquals( comparableElement, queue.top() );
     }
-    
+
     @Test
-    public void EmptyQueueGetTopElementTest()
+    public void getTopElementFromNonEmptyQueueWithMoreThanOneElementTest()
     {
-        fail( "Not yet implemented" );
+        this.addGenericElementToQueue();
+        this.addGenericElementToQueue();
+        this.addGenericElementToQueue();
+        this.addGenericElementToQueue();
+        this.addGenericElementToQueue();
+
+        queue.add( comparableElement );
+
+        assertEquals( comparableElement, queue.top() );
     }
-    
+
     @Test
-    public void NonEmptyQueueGetTopElementTest()
+    public void removeElementFromEmptyQueueTest()
     {
-        fail( "Not yet implemented" );
+        exception.handleAssertionErrors();
+        exception.expect( AssertionError.class );
+
+        queue.remove();
     }
-    
+
     @Test
-    public void EmptyQueueRemoveElementTest()
+    public void removeElementFromNonEmptyQueueWithOnlyOneElementTest()
     {
-        fail( "Not yet implemented" );
+        this.addGenericElementToQueue();
+
+        queue.remove();
+
+        assertTrue( queue.isEmpty() );
     }
-    
+
     @Test
-    public void NonEmptyQueueRemoveElementTest()
+    public void removeElementFromNonEmptyQueueWithMoreThanOneElementTest()
     {
-        fail( "Not yet implemented" );
+        this.addGenericElementToQueue();
+        this.addGenericElementToQueue();
+        this.addGenericElementToQueue();
+
+        queue.remove();
+
+        assertEquals( 2, queue.size() );
     }
-    
+
+    @Test
+    public void removeAllElementsFromQueueTest()
+    {
+        this.addGenericElementToQueue();
+        this.addGenericElementToQueue();
+        this.addGenericElementToQueue();
+
+        queue.remove();
+        queue.remove();
+        queue.remove();
+
+        assertTrue( queue.isEmpty() );
+    }
+
     private void addGenericElementToQueue()
     {
         queue.add( new Object() );
